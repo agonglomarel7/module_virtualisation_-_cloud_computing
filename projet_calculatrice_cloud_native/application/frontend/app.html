@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calculatrice</title>
+  <link rel="stylesheet" href="app.css">
+</head>
+<body>
+  <div class="calculator">
+    <div id="display" class="display">0</div>
+    <div class="buttons">
+      <button class="action-btn" onclick="clearDisplay()">AC</button>
+      <button class="action-btn" onclick="deleteLast()">DE</button>
+      <button onclick="appendToDisplay('.')">.</button>
+      <button onclick="appendToDisplay('/')">/</button>
+
+      <button onclick="appendToDisplay('7')">7</button>
+      <button onclick="appendToDisplay('8')">8</button>
+      <button onclick="appendToDisplay('9')">9</button>
+      <button onclick="appendToDisplay('*')">*</button>
+
+      <button onclick="appendToDisplay('4')">4</button>
+      <button onclick="appendToDisplay('5')">5</button>
+      <button onclick="appendToDisplay('6')">6</button>
+      <button onclick="appendToDisplay('-')">-</button>
+
+      <button onclick="appendToDisplay('1')">1</button>
+      <button onclick="appendToDisplay('2')">2</button>
+      <button onclick="appendToDisplay('3')">3</button>
+      <button onclick="appendToDisplay('+')">+</button>
+
+      <button onclick="appendToDisplay('00')">00</button>
+      <button onclick="appendToDisplay('0')">0</button>
+      <button onclick="toggleParenthesis()">()</button>
+      <button class="equal-btn" style="padding: 15px;" onclick="calculateResult()">=</button>
+    </div>
+  </div>
+
+  <script>
+    let display = document.getElementById('display');
+    let openParenthesis = true;
+
+    function appendToDisplay(value) {
+      if (display.innerText === '0') {
+        display.innerText = value;
+      } else {
+        display.innerText += value;
+      }
+    }
+
+    function toggleParenthesis() {
+      if (openParenthesis) {
+        appendToDisplay('(');
+      } else {
+        appendToDisplay(')');
+      }
+      openParenthesis = !openParenthesis;
+    }
+
+    function clearDisplay() {
+      display.innerText = '0';
+      openParenthesis = true;
+    }
+
+    function deleteLast() {
+      let text = display.innerText;
+      display.innerText = text.length > 1 ? text.slice(0, -1) : '0';
+    }
+
+    function calculateResult() {
+      try {
+        display.innerText = eval(display.innerText);
+      } catch (error) {
+        alert('Erreur dans l\'expression');
+      }
+    }
+  </script>
+</body>
+</html>
