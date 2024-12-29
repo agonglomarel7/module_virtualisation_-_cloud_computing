@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Calculatrice</title>
   <link rel="stylesheet" href="app.css">
+  <script defer src="app.js"></script> <!-- 'defer' pour charger le script après le HTML -->
 </head>
 <body>
   <div class="calculator">
@@ -33,48 +34,7 @@
       <button onclick="appendToDisplay('00')">00</button>
       <button onclick="appendToDisplay('0')">0</button>
       <button onclick="toggleParenthesis()">()</button>
-      <button class="equal-btn" style="padding: 15px;" onclick="calculateResult()">=</button>
-    </div>
-  </div>
-
-  <script>
-    let display = document.getElementById('display');
-    let openParenthesis = true;
-
-    function appendToDisplay(value) {
-      if (display.innerText === '0') {
-        display.innerText = value;
-      } else {
-        display.innerText += value;
-      }
-    }
-
-    function toggleParenthesis() {
-      if (openParenthesis) {
-        appendToDisplay('(');
-      } else {
-        appendToDisplay(')');
-      }
-      openParenthesis = !openParenthesis;
-    }
-
-    function clearDisplay() {
-      display.innerText = '0';
-      openParenthesis = true;
-    }
-
-    function deleteLast() {
-      let text = display.innerText;
-      display.innerText = text.length > 1 ? text.slice(0, -1) : '0';
-    }
-
-    function calculateResult() {
-      try {
-        display.innerText = eval(display.innerText);
-      } catch (error) {
-        alert('Erreur dans l\'expression');
-      }
-    }
-  </script>
+      <button class="equal-btn" onclick="calculateResult()">=</button>
+    </div>  
 </body>
 </html>
