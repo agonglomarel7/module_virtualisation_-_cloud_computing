@@ -1,24 +1,56 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-import math
 import pika
 import uuid
 import json
+import redis
+import time
+import os
 
 app = Flask(__name__)
 CORS(app)  # Autoriser toutes les origines par défaut
 
-@app.route("/")
-def home():
-    return send_from_directory("/frontend", "index.html")
+# Connexion à Redis
+def connect_to_redis():
+    # Récupération du port via la variable d'environnement, avec une valeur par défaut
+    redis_host = os.getenv('REDIS_HOST', 'redis')
+    redis_port = int(os.getenv('REDIS_PORT', 6379))
+    while True:
+        try:
+            redis_client = redis.StrictRedis(host=redis_host, port=redis_port, db=0)
+            # Test de connexion
+            redis_client.ping()
+            print("Connected to Redis")
+            return redis_client
+        except redis.ConnectionError:
+            print("Waiting for Redis...")
+            time.sleep(5)
 
-# Simuler un stockage pour les résultats (à remplacer par Redis en prod)
-results_cache = {}
+# Utilisation de la fonction de connexion
+redis_client = connect_to_redis()
+
 
 # Configuration RabbitMQ
-connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+def connect_to_rabbitmq():
+    rabbitmq_host = os.getenv('RABBITMQ_HOST', 'rabbitmq')
+    while True:
+        try:
+            connection = pika.BlockingConnection(pika.ConnectionParameters(host=rabbitmq_host))
+            return connection
+        except pika.exceptions.AMQPConnectionError:
+            print("Waiting for RabbitMQ...")
+            time.sleep(5)
+
+connection = connect_to_rabbitmq()
 channel = connection.channel()
+
+# Déclarer la file d'attente RabbitMQ (assurez-vous que cette queue est bien créée)
 channel.queue_declare(queue='calculations')
+
+
+@app.route("/")
+def home():
+    return "Bienvenue sur l'API de calculatrice !"
 
 @app.route("/calculate", methods=["POST"])
 def request_calculation():
@@ -31,7 +63,7 @@ def request_calculation():
 
         # Générer un ID unique pour l'opération
         operation_id = str(uuid.uuid4())
-        results_cache[operation_id] = None  # Réserver l'ID dans le cache
+        redis_client.set(operation_id, "pending")
 
         # Envoyer la tâche à RabbitMQ
         channel.basic_publish(
@@ -49,16 +81,18 @@ def request_calculation():
 def get_result(operation_id):
     try:
         # Vérifier si l'opération existe dans le cache
-        if operation_id not in results_cache:
+        if not redis_client.exists(operation_id):
             return jsonify({"error": "ID non trouvé"}), 404
 
-        result = results_cache[operation_id]
-        if result is None:
+        result = redis_client.get(operation_id)
+        if result == "pending":
             return jsonify({"message": "Résultat non encore disponible"}), 202
-        return jsonify({"result": result})
+
+        # Si le résultat est disponible, le retourner sous forme de string
+        return jsonify({"result": result.decode('utf-8')})  # Décoder les octets en string
 
     except Exception as e:
         return jsonify({"error": str(e)}), 400
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)
