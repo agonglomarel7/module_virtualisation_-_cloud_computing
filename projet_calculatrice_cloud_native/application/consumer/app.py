@@ -1,8 +1,9 @@
 import pika
 import json
+import redis
 
 # Simuler un stockage pour les résultats (à remplacer par Redis en prod)
-results_cache = {}
+redis_client = redis.Redis(host='localhost', port=6378)
 
 # Contexte sécurisé pour évaluer les expressions
 ALLOWED_GLOBALS = {
@@ -33,12 +34,12 @@ def on_message(channel, method, properties, body):
     try:
         # Évaluer l'expression mathématique
         result = safe_eval(expression)
-        results_cache[operation_id] = result
+        redis_client.set(operation_id, result)
 
         print(f"Calcul terminé : {expression} = {result}")
 
     except Exception as e:
-        results_cache[operation_id] = f"Erreur : {str(e)}"
+        redis_client[operation_id] = f"Erreur : {str(e)}"
 
 channel.basic_consume(queue='calculations', on_message_callback=on_message, auto_ack=True)
 
