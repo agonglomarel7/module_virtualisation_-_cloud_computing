@@ -1,9 +1,43 @@
 import pika
 import json
 import redis
+import time
+import os
 
-# Simuler un stockage pour les résultats (à remplacer par Redis en prod)
-redis_client = redis.Redis(host='localhost', port=6378)
+# Connexion à Redis
+def connect_to_redis():
+    # Récupération du port via la variable d'environnement, avec une valeur par défaut
+    redis_host = os.getenv('REDIS_HOST', 'redis')
+    redis_port = int(os.getenv('REDIS_PORT', 6379))
+    while True:
+        try:
+            redis_client = redis.StrictRedis(host=redis_host, port=redis_port, db=0)
+            # Test de connexion
+            redis_client.ping()
+            print("Connected to Redis")
+            return redis_client
+        except redis.ConnectionError:
+            print("Waiting for Redis...")
+            time.sleep(5)
+
+# Utilisation de la fonction de connexion
+redis_client = connect_to_redis()
+
+# Configuration RabbitMQ
+def connect_to_rabbitmq():
+    rabbitmq_host = os.getenv('RABBITMQ_HOST', 'rabbitmq')
+    while True:
+        try:
+            connection = pika.BlockingConnection(pika.ConnectionParameters(host=rabbitmq_host))
+            return connection
+        except pika.exceptions.AMQPConnectionError:
+            print("Waiting for RabbitMQ...")
+            time.sleep(5)
+
+connection = connect_to_rabbitmq()
+channel = connection.channel()
+channel.queue_declare(queue='calculations')
+
 
 # Contexte sécurisé pour évaluer les expressions
 ALLOWED_GLOBALS = {
@@ -12,11 +46,6 @@ ALLOWED_GLOBALS = {
     "abs": abs,
     "round": round
 }
-
-# Configuration RabbitMQ
-connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
-channel = connection.channel()
-channel.queue_declare(queue='calculations')
 
 def safe_eval(expression):
     """Évaluer une expression mathématique en toute sécurité."""

@@ -4,23 +4,53 @@ import pika
 import uuid
 import json
 import redis
+import time
+import os
 
 app = Flask(__name__)
 CORS(app)  # Autoriser toutes les origines par défaut
 
-@app.route("/")
-def home():
-    return "Bienvenue sur l'API de calculatrice !"
+# Connexion à Redis
+def connect_to_redis():
+    # Récupération du port via la variable d'environnement, avec une valeur par défaut
+    redis_host = os.getenv('REDIS_HOST', 'redis')
+    redis_port = int(os.getenv('REDIS_PORT', 6379))
+    while True:
+        try:
+            redis_client = redis.StrictRedis(host=redis_host, port=redis_port, db=0)
+            # Test de connexion
+            redis_client.ping()
+            print("Connected to Redis")
+            return redis_client
+        except redis.ConnectionError:
+            print("Waiting for Redis...")
+            time.sleep(5)
 
-# Configuration Redis
-redis_client = redis.StrictRedis(host='localhost', port=6378, db=0)  # Port corrigé à 6379
+# Utilisation de la fonction de connexion
+redis_client = connect_to_redis()
+
 
 # Configuration RabbitMQ
-connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+def connect_to_rabbitmq():
+    rabbitmq_host = os.getenv('RABBITMQ_HOST', 'rabbitmq')
+    while True:
+        try:
+            connection = pika.BlockingConnection(pika.ConnectionParameters(host=rabbitmq_host))
+            return connection
+        except pika.exceptions.AMQPConnectionError:
+            print("Waiting for RabbitMQ...")
+            time.sleep(5)
+
+connection = connect_to_rabbitmq()
 channel = connection.channel()
 
 # Déclarer la file d'attente RabbitMQ (assurez-vous que cette queue est bien créée)
 channel.queue_declare(queue='calculations')
+
+
+@app.route("/")
+def home():
+    return "Bienvenue sur l'API de calculatrice !"
 
 @app.route("/calculate", methods=["POST"])
 def request_calculation():
@@ -65,4 +95,4 @@ def get_result(operation_id):
         return jsonify({"error": str(e)}), 400
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)

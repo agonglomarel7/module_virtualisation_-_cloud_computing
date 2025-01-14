@@ -1,0 +1,2 @@
+pika           # Bibliothèque pour interagir avec RabbitMQ.
+redis          # Client Redis pour Python.

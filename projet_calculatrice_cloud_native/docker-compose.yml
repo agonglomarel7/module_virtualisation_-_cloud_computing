@@ -1,16 +1,16 @@
 version: '3.8'
 services:
-  # backend:
-  #   build:
-  #     context: ./application/backend
-  #   ports:
-  #     - "5000:5000"
-  #   environment:
-  #     REDIS_HOST: redis
-  #     RABBITMQ_HOST: rabbitmq
-  #   depends_on:
-  #     - redis
-  #     - rabbitmq
+  backend:
+    build:
+      context: ./application/backend
+    ports:
+      - "5000:5000"
+    environment:
+      REDIS_HOST: redis
+      RABBITMQ_HOST: rabbitmq
+    depends_on:
+      - redis
+      - rabbitmq
 
   # frontend:
   #   build:
@@ -20,20 +20,20 @@ services:
   #   depends_on:
   #     - backend
 
-  # consumer:
-  #   build:
-  #     context: ./application/consumer
-  #   environment:
-  #     REDIS_HOST: redis
-  #     RABBITMQ_HOST: rabbitmq
-  #   depends_on:
-  #     - redis
-  #     - rabbitmq
+  consumer:
+    build:
+      context: ./application/consumer
+    environment:
+      REDIS_HOST: redis
+      RABBITMQ_HOST: rabbitmq
+    depends_on:
+      - redis
+      - rabbitmq
 
   redis:
     image: redis:latest
     ports:
-      - "6378:6379"
+      - "6379:6379"
 
   rabbitmq:
     image: rabbitmq:3-management
