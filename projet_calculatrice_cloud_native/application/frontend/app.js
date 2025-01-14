@@ -40,6 +40,34 @@ async function isBackendOnline() {
     }
 }
 
+async function getResult(operationId) {
+  try {
+    const response = await fetch(`http://127.0.0.1:5000/result/${operationId}`);
+    
+    if (!response.ok) {
+      throw new Error("Erreur lors de la récupération du résultat");
+    }
+
+    const data = await response.json();
+
+    if (data.error) {
+      alert("Erreur: " + data.error);
+      display.innerText = "Erreur";
+    } else if (data.result === "pending") {
+      alert("Le résultat n'est pas encore prêt, réessayez plus tard.");
+      display.innerText = "En attente";
+      // Vous pouvez relancer la fonction après un délai pour vérifier à nouveau
+      setTimeout(() => getResult(operationId), 2000); // Vérifier toutes les 2 secondes
+    } else {
+      console.log("Résultat reçu : ", data.result);
+      display.innerText = data.result;
+    }
+  } catch (error) {
+    alert("Une erreur s'est produite lors de la récupération du résultat : " + error.message);
+    display.innerText = "Erreur";
+  }
+}
+
 
 // Calculer le résultat en envoyant la requête au backend
 async function calculateResult() {
@@ -70,7 +98,9 @@ async function calculateResult() {
         alert("Erreur: " + data.error);
         display.innerText = "Erreur";
       } else {
-        display.innerText = data.result; // Afficher le résultat
+        console.log("ID de l'opération : ", data.id);
+        // Appeler la fonction pour obtenir le résultat
+        getResult(data.id);  // Utiliser l'ID pour récupérer le résultat
       }
     })
     .catch((error) => {
