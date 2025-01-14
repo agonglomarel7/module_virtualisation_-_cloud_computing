@@ -10,7 +10,8 @@ CORS(app)  # Autoriser toutes les origines par défaut
 
 @app.route("/")
 def home():
-    return "Bienvenue sur l'API de calculatrice !"
+    return send_from_directory("/frontend", "index.html")
+
 # Simuler un stockage pour les résultats (à remplacer par Redis en prod)
 results_cache = {}
 
