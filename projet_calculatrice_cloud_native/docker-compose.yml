@@ -12,13 +12,15 @@ services:
       - redis
       - rabbitmq
 
-  # frontend:
-  #   build:
-  #     context: ./application/frontend
-  #   ports:
-  #     - "3000:3000"
-  #   depends_on:
-  #     - backend
+  frontend:
+    build:
+      context: ./application/frontend
+    ports:
+      - "80:80"
+    environment:
+      BACKEND_HOST: "http://localhost:5000"
+    depends_on:
+      - backend
 
   consumer:
     build:

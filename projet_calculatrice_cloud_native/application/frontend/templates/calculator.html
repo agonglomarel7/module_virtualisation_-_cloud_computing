@@ -1,16 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Calculatrice</title>
-  <link rel="stylesheet" href="app.css">
-  <script defer src="app.js"></script> <!-- 'defer' pour charger le script après le HTML -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='calculator.css') }}">
+  <!-- Injecter la variable BACKEND_URL dans le JavaScript -->
+  <script>
+    window.BACKEND_URL = "{{ backend_url }}";
+  </script>
+  <script defer src="{{ url_for('static', filename='calculator.js') }}"></script>
+  <!-- 'defer' pour charger le script après le HTML -->
 </head>
+
 <body>
   <div class="navbar">
     <div class="logo">
-        <img src="https://esirem.u-bourgogne.fr/wp-content/uploads/2023/12/Polytech_HORIZ_dijon-1024x319.png" alt="Polytech Dijon Logo">
+      <img src="https://esirem.u-bourgogne.fr/wp-content/uploads/2023/12/Polytech_HORIZ_dijon-1024x319.png"
+        alt="Polytech Dijon Logo">
     </div>
   </div>
   <div class="content">
@@ -41,8 +49,9 @@
         <button onclick="appendToDisplay('0')">0</button>
         <button onclick="toggleParenthesis()">()</button>
         <button class="equal-btn" onclick="calculateResult()">=</button>
-      </div>  
+      </div>
     </div>
   </div>
 </body>
+
 </html>

@@ -31,7 +31,7 @@ function deleteLast() {
 // Vérifier si le backend est en ligne
 async function isBackendOnline() {
     try {
-        const response = await fetch("http://127.0.0.1:5000/", { method: "GET" });
+        const response = await fetch(`${window.BACKEND_URL}/`, { method: "GET" });
         console.log("Réponse du serveur : ", response.status);  // Log de réponse
         return response.ok;
     } catch (error) {
@@ -42,7 +42,7 @@ async function isBackendOnline() {
 
 async function getResult(operationId) {
   try {
-    const response = await fetch(`http://127.0.0.1:5000/result/${operationId}`);
+    const response = await fetch(`${window.BACKEND_URL}/result/${operationId}`);
     
     if (!response.ok) {
       throw new Error("Erreur lors de la récupération du résultat");
@@ -80,7 +80,7 @@ async function calculateResult() {
 
   const expression = display.innerText;
 
-  fetch("http://127.0.0.1:5000/calculate", {
+  fetch(`${window.BACKEND_URL}/calculate`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
