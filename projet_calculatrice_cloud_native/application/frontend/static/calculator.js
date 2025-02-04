@@ -31,7 +31,7 @@ function deleteLast() {
 // Vérifier si le backend est en ligne
 async function isBackendOnline() {
     try {
-        const response = await fetch(`${window.BACKEND_URL}/`, { method: "GET" });
+        const response = await fetch(`${window.BACKEND_URL}`, { method: "GET" });
         console.log("Réponse du serveur : ", response.status);  // Log de réponse
         return response.ok;
     } catch (error) {

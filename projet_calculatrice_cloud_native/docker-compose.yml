@@ -26,7 +26,7 @@ services:
     ports:
       - "80:80"
     environment:
-      BACKEND_HOST: "http://localhost:5000"
+      BACKEND_HOST: "http://localhost:5000/api"
     depends_on:
       - backend
 

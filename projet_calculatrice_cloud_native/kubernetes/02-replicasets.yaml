@@ -2,6 +2,54 @@
 apiVersion: apps/v1
 kind: ReplicaSet
 metadata:
+  name: redis-rs
+  namespace: johanu-marel
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+        - name: redis
+          image: redis:latest
+          ports:
+            - containerPort: 6379
+---
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: rabbitmq-rs
+  namespace: johanu-marel
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rabbitmq
+  template:
+    metadata:
+      labels:
+        app: rabbitmq
+    spec:
+      containers:
+        - name: rabbitmq
+          image: rabbitmq:3-management
+          ports:
+            - containerPort: 5672
+            - containerPort: 15672
+          env:
+            - name: RABBITMQ_DEFAULT_USER
+              value: "guest"
+            - name: RABBITMQ_DEFAULT_PASS
+              value: "guest"
+---
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
   name: backend-rs
   namespace: johanu-marel
 spec:
@@ -22,6 +70,8 @@ spec:
           env:
             - name: REDIS_HOST
               value: "redis"
+            - name: REDIS_PORT
+              value: "6379"
             - name: RABBITMQ_HOST
               value: "rabbitmq"
           resources:
@@ -51,7 +101,7 @@ spec:
             - containerPort: 80
           env:
             - name: BACKEND_HOST
-              value: "http://backend:5000"
+              value: "https://calculatrice-johanu-marel-polytech-dijon.kiowy.net/api"
           resources:
             requests:
               cpu: "4m"
@@ -78,6 +128,8 @@ spec:
           env:
             - name: REDIS_HOST
               value: "redis"
+            - name: REDIS_PORT
+              value: "6379"
             - name: RABBITMQ_HOST
               value: "rabbitmq"
           resources:
