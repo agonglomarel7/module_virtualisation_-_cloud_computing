@@ -3,6 +3,10 @@ services:
   backend:
     build:
       context: ./application/backend
+      tags:
+        - europe-west1-docker.pkg.dev/polytech-dijon/polytech-dijon/calculator-backend-2025:johanu-marel-v1.0.0
+    container_name: calculator-backend-container
+    image: calculator-backend-2025:johanu-marel-v1.0.0
     ports:
       - "5000:5000"
     environment:
@@ -15,6 +19,10 @@ services:
   frontend:
     build:
       context: ./application/frontend
+      tags:
+        - europe-west1-docker.pkg.dev/polytech-dijon/polytech-dijon/calculator-frontend-2025:johanu-marel-v1.0.0
+    container_name: calculator-frontend-container
+    image: calculator-frontend-2025:johanu-marel-v1.0.0
     ports:
       - "80:80"
     environment:
@@ -25,6 +33,10 @@ services:
   consumer:
     build:
       context: ./application/consumer
+      tags:
+        - europe-west1-docker.pkg.dev/polytech-dijon/polytech-dijon/calculator-consumer-2025:johanu-marel-v1.0.0
+    container_name: calculator-consumer-container
+    image: calculator-consumer-2025:johanu-marel-v1.0.0
     environment:
       REDIS_HOST: redis
       RABBITMQ_HOST: rabbitmq
