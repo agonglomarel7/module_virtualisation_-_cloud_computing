@@ -1,0 +1,86 @@
+---
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: backend-rs
+  namespace: johanu-marel
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+        - name: backend
+          image: europe-west1-docker.pkg.dev/polytech-dijon/polytech-dijon/calculator-backend-2025:johanu-marel-v1.0.0
+          ports:
+            - containerPort: 5000
+          env:
+            - name: REDIS_HOST
+              value: "redis"
+            - name: RABBITMQ_HOST
+              value: "rabbitmq"
+          resources:
+            requests:
+              cpu: "4m"
+              memory: "32Mi"
+---
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: frontend-rs
+  namespace: johanu-marel
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+        - name: frontend
+          image: europe-west1-docker.pkg.dev/polytech-dijon/polytech-dijon/calculator-frontend-2025:johanu-marel-v1.0.0
+          ports:
+            - containerPort: 80
+          env:
+            - name: BACKEND_HOST
+              value: "http://backend:5000"
+          resources:
+            requests:
+              cpu: "4m"
+              memory: "32Mi"
+---
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: consumer-rs
+  namespace: johanu-marel
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: consumer
+  template:
+    metadata:
+      labels:
+        app: consumer
+    spec:
+      containers:
+        - name: consumer
+          image: europe-west1-docker.pkg.dev/polytech-dijon/polytech-dijon/calculator-consumer-2025:johanu-marel-v1.0.0
+          env:
+            - name: REDIS_HOST
+              value: "redis"
+            - name: RABBITMQ_HOST
+              value: "rabbitmq"
+          resources:
+            requests:
+              cpu: "4m"
+              memory: "32Mi"
