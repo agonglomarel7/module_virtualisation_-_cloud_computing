@@ -12,7 +12,7 @@ provider "scaleway" {
   region = var.region
 }
 
-# Namespace pour héberger des conteneurs (remplace l'ancien `scaleway_container_registry`)
+# Namespace pour héberger des conteneurs
 resource "scaleway_container_namespace" "calculator_registry" {
   name   = "calculator-registry-${var.environment}"
   region = var.region
