@@ -101,7 +101,7 @@ spec:
             - containerPort: 80
           env:
             - name: BACKEND_HOST
-              value: "https://calculatrice-johanu-marel-polytech-dijon.kiowy.net/api"
+              value: "https://calculatrice-johanu-marel.randever.com/api"
           resources:
             requests:
               cpu: "4m"

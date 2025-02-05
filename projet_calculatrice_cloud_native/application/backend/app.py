@@ -35,7 +35,7 @@ def connect_to_rabbitmq():
     rabbitmq_host = os.getenv('RABBITMQ_HOST', 'rabbitmq')
     while True:
         try:
-            connection = pika.BlockingConnection(pika.ConnectionParameters(host=rabbitmq_host))
+            connection = pika.BlockingConnection(pika.ConnectionParameters(host=rabbitmq_host, heartbeat=0))
             return connection
         except pika.exceptions.AMQPConnectionError:
             print("Waiting for RabbitMQ...")
@@ -48,7 +48,7 @@ channel = connection.channel()
 channel.queue_declare(queue='calculations')
 
 
-@app.route("/api")
+@app.route("/api", methods=['GET'], strict_slashes=False)
 def home():
     return "Bienvenue sur l'API de calculatrice !"
 

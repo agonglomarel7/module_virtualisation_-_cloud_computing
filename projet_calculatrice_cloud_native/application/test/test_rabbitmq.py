@@ -2,7 +2,7 @@ import pika
 
 def test_rabbitmq():
     # Connexion à RabbitMQ
-    connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+    connection = pika.BlockingConnection(pika.ConnectionParameters('localhost', heartbeat=0))
     channel = connection.channel()
 
     # Déclarer une file d'attente
