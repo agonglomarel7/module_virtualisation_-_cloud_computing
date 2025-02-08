@@ -52,7 +52,7 @@ channel.queue_declare(queue='calculations')
 def home():
     return "Bienvenue sur l'API de calculatrice !"
 
-@app.route("/api/calculate", methods=["POST"])
+@app.route("/api/calculate", methods=["POST"], strict_slashes=False)
 def request_calculation():
     try:
         data = request.get_json()
@@ -77,7 +77,7 @@ def request_calculation():
     except Exception as e:
         return jsonify({"error": str(e)}), 400
 
-@app.route("/api/result/<operation_id>", methods=["GET"])
+@app.route("/api/result/<operation_id>", methods=["GET"], strict_slashes=False)
 def get_result(operation_id):
     try:
         # Vérifier si l'opération existe dans le cache
