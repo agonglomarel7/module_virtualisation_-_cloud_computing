@@ -3,46 +3,50 @@ import json
 import redis
 import time
 import os
+import logging
+
+# Configuration du logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s', handlers=[
+    logging.StreamHandler()
+])
+logger = logging.getLogger(__name__)
 
 # Connexion à Redis
 def connect_to_redis():
-    # Récupération du port via la variable d'environnement, avec une valeur par défaut
     redis_host = os.getenv('REDIS_HOST', 'redis')
     redis_port = int(os.getenv('REDIS_PORT', 6379))
     while True:
         try:
             redis_client = redis.StrictRedis(host=redis_host, port=redis_port, db=0)
-            # Test de connexion
             redis_client.ping()
-            print("Connected to Redis")
+            logger.info("Connected to Redis")
             return redis_client
         except redis.ConnectionError:
-            print("Waiting for Redis...")
+            logger.warning("Waiting for Redis...")
             time.sleep(5)
 
-# Utilisation de la fonction de connexion
 redis_client = connect_to_redis()
 
-# Configuration RabbitMQ
+# Connexion à RabbitMQ
 def connect_to_rabbitmq():
     rabbitmq_host = os.getenv('RABBITMQ_HOST', 'rabbitmq')
     while True:
         try:
             connection = pika.BlockingConnection(pika.ConnectionParameters(host=rabbitmq_host, heartbeat=0))
+            logger.info("Connected to RabbitMQ")
             return connection
         except pika.exceptions.AMQPConnectionError:
-            print("Waiting for RabbitMQ...")
+            logger.warning("Waiting for RabbitMQ...")
             time.sleep(5)
 
 connection = connect_to_rabbitmq()
 channel = connection.channel()
 channel.queue_declare(queue='calculations')
 
-
 # Contexte sécurisé pour évaluer les expressions
 ALLOWED_GLOBALS = {
-    "__builtins__": None,  # Désactiver les fonctions intégrées pour la sécurité
-    "math": __import__("math"),  # Autoriser le module math
+    "__builtins__": None,
+    "math": __import__("math"),
     "abs": abs,
     "round": round
 }
@@ -52,25 +56,26 @@ def safe_eval(expression):
     return eval(expression, ALLOWED_GLOBALS)
 
 def on_message(channel, method, properties, body):
-    task = json.loads(body)
-    operation_id = task.get("id")
-    expression = task.get("expression")
-
-    if not operation_id or not expression:
-        print("Tâche invalide reçue :", task)
-        return
-
     try:
+        task = json.loads(body)
+        operation_id = task.get("id")
+        expression = task.get("expression")
+
+        if not operation_id or not expression:
+            logger.error("Tâche invalide reçue: %s", task)
+            return
+
         # Évaluer l'expression mathématique
         result = safe_eval(expression)
         redis_client.set(operation_id, result)
-
-        print(f"Calcul terminé : {expression} = {result}")
-
+        logger.info(f"Calcul terminé: {expression} = {result}")
+    
     except Exception as e:
-        redis_client[operation_id] = f"Erreur : {str(e)}"
+        error_message = f"Erreur : {str(e)}"
+        redis_client.set(operation_id, error_message)
+        logger.error("Erreur lors du traitement de la tâche: %s", error_message)
 
 channel.basic_consume(queue='calculations', on_message_callback=on_message, auto_ack=True)
 
-print("Consommateur en attente de tâches...")
+logger.info("Consommateur en attente de tâches...")
 channel.start_consuming()
