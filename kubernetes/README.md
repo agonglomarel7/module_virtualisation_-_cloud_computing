@@ -76,20 +76,39 @@ Le fichier `04-ingress.yaml` définit les règles Ingress pour exposer les servi
 
 ### Schéma du Déploiement Kubernetes
 
-graph TB
-  subgraph k8s ["Cluster Kubernetes"]
-    direction TB
-    redisPod["Pod Redis"]
-    rabbitmqPod["Pod RabbitMQ"]
-    backendPod["Pod Backend (API)"]
-    frontendPod["Pod Frontend"]
-    consumerPod["Pod Consumer"]
-  end
-  redisService["Service Redis"] --> redisPod
-  rabbitmqService["Service RabbitMQ"] --> rabbitmqPod
-  backendService["Service Backend"] --> backendPod
-  frontendService["Service Frontend"] --> frontendPod
-  consumerService["Service Consumer"] --> consumerPod
-  frontendService --> backendService
-  backendService --> redisService
-  backendService --> rabbitmqService
+```mermaid
+graph TD
+    subgraph k8s_cluster ["Cluster Kubernetes (calculator-cluster)"]
+        direction TB
+        redisPod["🐳 Pod Redis"]
+        rabbitmqPod["🐳 Pod RabbitMQ"]
+        backendPod["🐳 Pod Backend (API)"]
+        frontendPod["🐳 Pod Frontend"]
+        consumerPod["🐳 Pod Consumer"]
+    end
+
+    subgraph services ["Services Kubernetes"]
+        direction TB
+        redisService["🛢️ Service Redis"] --> redisPod
+        rabbitmqService["🐰 Service RabbitMQ"] --> rabbitmqPod
+        backendService["💻 Service Backend (API)"] --> backendPod
+        frontendService["🌐 Service Frontend"] --> frontendPod
+        consumerService["📤 Service Consumer"] --> consumerPod
+    end
+
+    subgraph ingress ["Ingress"]
+        direction TB
+        ingress1["🔑 Ingress:<br>calculatrice-johanu-marel-polytech-dijon.kiowy.net"]
+        ingress2["🔑 Ingress:<br>calculatrice-johanu-marel.randever.com"]
+        ingress1 -->|"/"| frontendService
+        ingress1 -->|"/api"| backendService
+        ingress2 -->|"/"| frontendService
+        ingress2 -->|"/api"| backendService
+    end
+
+    frontendService --> backendService
+    backendService --> redisService
+    backendService --> rabbitmqService
+    consumerService --> rabbitmqService
+    consumerService --> redisService
+```
