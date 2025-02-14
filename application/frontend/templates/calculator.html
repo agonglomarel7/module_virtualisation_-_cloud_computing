@@ -4,6 +4,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<<<<<<< HEAD:projet_calculatrice_cloud_native/application/frontend/app.html
+  <title>Calculatrice Scientifique</title>
+  <link rel="stylesheet" href="app.css">
+  <script defer src="app.js"></script>
+=======
   <title>Calculatrice</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='calculator.css') }}">
   <!-- Injecter la variable BACKEND_URL dans le JavaScript -->
@@ -12,6 +17,7 @@
   </script>
   <script defer src="{{ url_for('static', filename='calculator.js') }}"></script>
   <!-- 'defer' pour charger le script après le HTML -->
+>>>>>>> 516159b94cc84d89567f5c1c5fe41461e17ed85d:application/frontend/templates/calculator.html
 </head>
 
 <body>
@@ -29,6 +35,17 @@
         <button class="action-btn" onclick="deleteLast()">DE</button>
         <button onclick="appendToDisplay('.')">.</button>
         <button onclick="appendToDisplay('/')">/</button>
+
+        <!-- Boutons scientifiques -->
+        <button onclick="square()">x²</button>
+        <button onclick="cube()">x³</button>
+        <button onclick="sqrt()">√x</button>
+        <button onclick="cbrt()">∛x</button>
+        <button onclick="factorial()">n!</button>
+
+        <button onclick="appendToDisplay('Math.sin(')">sin</button>
+        <button onclick="appendToDisplay('Math.cos(')">cos</button>
+        <button onclick="appendToDisplay('Math.tan(')">tan</button>
 
         <button onclick="appendToDisplay('7')">7</button>
         <button onclick="appendToDisplay('8')">8</button>
@@ -49,7 +66,13 @@
         <button onclick="appendToDisplay('0')">0</button>
         <button onclick="toggleParenthesis()">()</button>
         <button class="equal-btn" onclick="calculateResult()">=</button>
+<<<<<<< HEAD:projet_calculatrice_cloud_native/application/frontend/app.html
+
+
+      </div>  
+=======
       </div>
+>>>>>>> 516159b94cc84d89567f5c1c5fe41461e17ed85d:application/frontend/templates/calculator.html
     </div>
   </div>
 </body>

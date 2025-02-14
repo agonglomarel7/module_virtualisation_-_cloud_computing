@@ -52,8 +52,16 @@ ALLOWED_GLOBALS = {
 }
 
 def safe_eval(expression):
-    """Évaluer une expression mathématique en toute sécurité."""
-    return eval(expression, ALLOWED_GLOBALS)
+    """Évalue une expression mathématique en toute sécurité."""
+    try:
+        # Vérifier que l'expression ne contient que des caractères autorisés
+        allowed_chars = "0123456789+-*/(). sqrtcbrtabsroundmath"
+        if any(c not in allowed_chars for c in expression.replace(" ", "")):
+            raise ValueError("Caractère non autorisé dans l'expression")
+
+        return eval(expression, ALLOWED_GLOBALS)
+    except Exception as e:
+        raise ValueError(f"Erreur d'évaluation : {str(e)}")
 
 def on_message(channel, method, properties, body):
     try:
