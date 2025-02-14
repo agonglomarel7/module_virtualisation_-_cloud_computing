@@ -14,9 +14,9 @@ Ce projet consiste à déployer une **Calculatrice Cloud Native** en utilisant d
 
 ---
 
-## Architecture du Projet
+## Architecture de l'application
 
-Consultez le [README - Architecture](./architecture/README.md) pour plus de détails.
+Consultez le [README - Architecture](./application/README.md) pour plus de détails.
 
 ---
 
