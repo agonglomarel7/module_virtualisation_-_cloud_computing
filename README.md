@@ -1,7 +1,3 @@
-# module_virtualisation_-_cloud_computing
-
-sudo docker-compose up  --build -d
-=======
 # Rapport du Projet - Calculatrice Cloud Native
 
 ## Membres du Groupe
@@ -56,7 +52,3 @@ Consultez le [README - Fondation](./foundation/README.md) pour plus de détails.
 ## Conclusion
 
 Ce projet nous a permis de mettre en pratique les concepts de virtualisation et de cloud computing, en déployant une application cloud-native sur un cluster Kubernetes. L'utilisation de Terraform pour l'infrastructure, Kubernetes pour le déploiement, et des technologies comme Redis et RabbitMQ pour la gestion des données et des files d'attente, a permis de créer une application robuste et scalable.
-<<<<<<< HEAD
-=======
->>>>>>> 516159b94cc84d89567f5c1c5fe41461e17ed85d
->>>>>>> 0dbd0995a2d1e93e7ee4ab1301a1aaced4428f88
