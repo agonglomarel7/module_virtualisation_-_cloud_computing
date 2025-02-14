@@ -78,37 +78,45 @@ Le fichier `04-ingress.yaml` définit les règles Ingress pour exposer les servi
 
 ```mermaid
 graph TD
-    subgraph k8s_cluster ["Cluster Kubernetes (calculator-cluster)"]
-        direction TB
-        redisPod["🐳 Pod Redis"]
-        rabbitmqPod["🐳 Pod RabbitMQ"]
-        backendPod["🐳 Pod Backend (API)"]
-        frontendPod["🐳 Pod Frontend"]
-        consumerPod["🐳 Pod Consumer"]
-    end
+    subgraph "Cluster Kubernetes"
+        subgraph "Namespace johanu-marel"
+            subgraph "frontend-replicaset"
+                frontendPod["🐳 Pod Frontend"]
+            end
+            subgraph "backend-replicaset"
+                backendPod["🐳 Pod Backend (API)"]
+            end
+            subgraph "redis-replicaset"
+                redisPod["🐳 Pod Redis"]
+            end
+            subgraph "rabbitmq-replicaset"
+                rabbitmqPod["🐳 Pod RabbitMQ"]
+            end
+            subgraph "consumer-replicaset"
+                consumerPod["🐳 Pod Consumer"]
+            end
 
-    subgraph services ["Services Kubernetes"]
-        direction TB
-        redisService["🛢️ Service Redis"] --> redisPod
-        rabbitmqService["🐰 Service RabbitMQ"] --> rabbitmqPod
-        backendService["💻 Service Backend (API)"] --> backendPod
-        frontendService["🌐 Service Frontend"] --> frontendPod
-        consumerService["📤 Service Consumer"] --> consumerPod
-    end
+            subgraph "Services Kubernetes"
+                svc-front([🌐 Service Frontend]) --> frontendPod
+                svc-backend([💻 Service Backend]) --> backendPod
+                svc-redis([🛢️ Service Redis]) --> redisPod
+                svc-rabbitmq([🐰 Service RabbitMQ]) --> rabbitmqPod
+            end
 
-    subgraph ingress ["Ingress"]
-        direction TB
-        ingress1["🔑 Ingress:<br>calculatrice-johanu-marel-polytech-dijon.kiowy.net"]
-        ingress2["🔑 Ingress:<br>calculatrice-johanu-marel.randever.com"]
-        ingress1 -->|"/"| frontendService
-        ingress1 -->|"/api"| backendService
-        ingress2 -->|"/"| frontendService
-        ingress2 -->|"/api"| backendService
-    end
+            subgraph "Ingress"
+                ing1["🔑 Ingress:<br>calculatrice-johanu-marel-polytech-dijon.kiowy.net"]
+                ing2["🔑 Ingress:<br>calculatrice-johanu-marel.randever.com"]
+                ing1 -->|"/"| svc-front
+                ing1 -->|"/api"| svc-backend
+                ing2 -->|"/"| svc-front
+                ing2 -->|"/api"| svc-backend
+            end
 
-    frontendService --> backendService
-    backendService --> redisService
-    backendService --> rabbitmqService
-    consumerService --> rabbitmqService
-    consumerService --> redisService
+            frontendPod --> backendPod
+            consumerPod --> svc-rabbitmq
+            consumerPod --> svc-redis
+            backendPod --> svc-redis
+            backendPod --> svc-rabbitmq
+        end
+    end
 ```
