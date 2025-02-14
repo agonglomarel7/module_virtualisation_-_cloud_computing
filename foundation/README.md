@@ -1,3 +1,21 @@
+# Infrastructure Terraform - Fondations
+
+Ce projet Terraform met en place les éléments suivants sur Scaleway :
+
+## 📌 Ressources créées
+
+| Ressource                   | Nom généré |
+|-----------------------------|--------------------------------------|
+| Namespace Conteneurs        | calculator-registry-${var.environment} |
+| Cluster Kubernetes          | calculator-cluster-${var.environment} |
+| Cluster Redis               | calculator-db-${var.environment} |
+| LoadBalancer                | calculator-lb-${var.environment} |
+| Enregistrement DNS          | ${var.subdomain}.kiowy.net |
+
+## 📊 Schéma de l’infrastructure
+
+
+
 Terraform used the selected providers to generate the following execution plan. Resource actions are indicated
 with the following symbols:
   + create
