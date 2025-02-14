@@ -64,7 +64,7 @@ spec:
     spec:
       containers:
         - name: backend
-          image: europe-west1-docker.pkg.dev/polytech-dijon/polytech-dijon/calculator-backend-2025:johanu-marel-v1.0.2
+          image: europe-west1-docker.pkg.dev/polytech-dijon/polytech-dijon/calculator-backend-2025:johanu-marel-v1.0.3
           ports:
             - containerPort: 5000
           env:
@@ -96,7 +96,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: europe-west1-docker.pkg.dev/polytech-dijon/polytech-dijon/calculator-frontend-2025:johanu-marel-v1.0.2
+          image: europe-west1-docker.pkg.dev/polytech-dijon/polytech-dijon/calculator-frontend-2025:johanu-marel-v1.0.3
           ports:
             - containerPort: 80
           env:
@@ -124,7 +124,7 @@ spec:
     spec:
       containers:
         - name: consumer
-          image: europe-west1-docker.pkg.dev/polytech-dijon/polytech-dijon/calculator-consumer-2025:johanu-marel-v1.0.2
+          image: europe-west1-docker.pkg.dev/polytech-dijon/polytech-dijon/calculator-consumer-2025:johanu-marel-v1.0.3
           env:
             - name: REDIS_HOST
               value: "redis"
