@@ -1,6 +1,52 @@
 
 ## Déploiement Kubernetes
 
+### Schéma du Déploiement Kubernetes
+```mermaid
+graph TD
+    subgraph "Cluster Kubernetes"
+        subgraph "Namespace johanu-marel"
+            subgraph "frontend-replicaset"
+                frontendPod["🐳 Pod Frontend"]
+            end
+            subgraph "backend-replicaset"
+                backendPod["🐳 Pod Backend (API)"]
+            end
+            subgraph "redis-replicaset"
+                redisPod["🐳 Pod Redis"]
+            end
+            subgraph "rabbitmq-replicaset"
+                rabbitmqPod["🐳 Pod RabbitMQ"]
+            end
+            subgraph "consumer-replicaset"
+                consumerPod["🐳 Pod Consumer"]
+            end
+
+            subgraph "Services Kubernetes"
+                svc-front([🌐 Service Frontend]) --> frontendPod
+                svc-backend([💻 Service Backend]) --> backendPod
+                svc-redis([🛢️ Service Redis]) --> redisPod
+                svc-rabbitmq([🐰 Service RabbitMQ]) --> rabbitmqPod
+            end
+
+            subgraph "Ingress"
+                ing1["🔑 Ingress:<br>calculatrice-johanu-marel-polytech-dijon.kiowy.net"]
+                ing2["🔑 Ingress:<br>calculatrice-johanu-marel.randever.com"]
+                ing1 -->|"/"| svc-front
+                ing1 -->|"/api"| svc-backend
+                ing2 -->|"/"| svc-front
+                ing2 -->|"/api"| svc-backend
+            end
+
+            frontendPod --> backendPod
+            consumerPod --> svc-rabbitmq
+            consumerPod --> svc-redis
+            backendPod --> svc-redis
+            backendPod --> svc-rabbitmq
+        end
+    end
+```
+
 ### Fichiers de Configuration
 
 1. **Namespace** : `01-namespace.yaml`
@@ -74,49 +120,3 @@ Le fichier `04-ingress.yaml` définit les règles Ingress pour exposer les servi
 - **Deuxième Règle** :  
   Cette règle a été ajoutée pour rendre l'application accessible publiquement sur Internet. Elle permet de partager l'application avec d'autres utilisateurs sans qu'ils aient besoin de modifier leur fichier `hosts`.
 
-### Schéma du Déploiement Kubernetes
-
-```mermaid
-graph TD
-    subgraph "Cluster Kubernetes"
-        subgraph "Namespace johanu-marel"
-            subgraph "frontend-replicaset"
-                frontendPod["🐳 Pod Frontend"]
-            end
-            subgraph "backend-replicaset"
-                backendPod["🐳 Pod Backend (API)"]
-            end
-            subgraph "redis-replicaset"
-                redisPod["🐳 Pod Redis"]
-            end
-            subgraph "rabbitmq-replicaset"
-                rabbitmqPod["🐳 Pod RabbitMQ"]
-            end
-            subgraph "consumer-replicaset"
-                consumerPod["🐳 Pod Consumer"]
-            end
-
-            subgraph "Services Kubernetes"
-                svc-front([🌐 Service Frontend]) --> frontendPod
-                svc-backend([💻 Service Backend]) --> backendPod
-                svc-redis([🛢️ Service Redis]) --> redisPod
-                svc-rabbitmq([🐰 Service RabbitMQ]) --> rabbitmqPod
-            end
-
-            subgraph "Ingress"
-                ing1["🔑 Ingress:<br>calculatrice-johanu-marel-polytech-dijon.kiowy.net"]
-                ing2["🔑 Ingress:<br>calculatrice-johanu-marel.randever.com"]
-                ing1 -->|"/"| svc-front
-                ing1 -->|"/api"| svc-backend
-                ing2 -->|"/"| svc-front
-                ing2 -->|"/api"| svc-backend
-            end
-
-            frontendPod --> backendPod
-            consumerPod --> svc-rabbitmq
-            consumerPod --> svc-redis
-            backendPod --> svc-redis
-            backendPod --> svc-rabbitmq
-        end
-    end
-```
