@@ -1,9 +1,21 @@
+# Terraform - Fondation de l'Infrastructure
+
+## Les ressources de fondation suivantes sont définies via Terraform :
+
++ Namespace de registre de conteneurs : Création d'un espace de noms pour stocker les images Docker dans un registre Scaleway.
++ DNS : Enregistrement des domaines nécessaires pour l'application.
++ Cluster Kubernetes : Déploiement du cluster Kubernetes sur Scaleway.
++ Load Balancer : Mise en place de Load Balancers pour la gestion du trafic.
++ Base de données : Base de données PostgreSQL pour le stockage des données persistantes de l'application.
+
+## Résultat de la commande terraform plan
+
 Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the following symbols:
   + create
 
 Terraform will perform the following actions:
 
-  # scaleway_container_namespace.calculator_registry will be created
+  ### scaleway_container_namespace.calculator_registry will be created
   + resource "scaleway_container_namespace" "calculator_registry" {
       + destroy_registry      = false
       + id                    = (known after apply)
@@ -15,7 +27,7 @@ Terraform will perform the following actions:
       + registry_namespace_id = (known after apply)
     }
 
-  # scaleway_domain_record.calculator_dns will be created
+  ### scaleway_domain_record.calculator_dns will be created
   + resource "scaleway_domain_record" "calculator_dns" {
       + data            = (known after apply)
       + dns_zone        = "kiowy.net"
@@ -30,7 +42,7 @@ Terraform will perform the following actions:
       + type            = "A"
     }
 
-  # scaleway_k8s_cluster.calculator_cluster will be created
+  ### scaleway_k8s_cluster.calculator_cluster will be created
   + resource "scaleway_k8s_cluster" "calculator_cluster" {
       + apiserver_url               = (known after apply)
       + cni                         = "cilium"
@@ -56,7 +68,7 @@ Terraform will perform the following actions:
       + open_id_connect_config (known after apply)
     }
 
-  # scaleway_lb.calculator_lb will be created
+  ### scaleway_lb.calculator_lb will be created
   + resource "scaleway_lb" "calculator_lb" {
       + id                      = (known after apply)
       + ip_address              = (known after apply)
@@ -72,7 +84,7 @@ Terraform will perform the following actions:
       + zone                    = (known after apply)
     }
 
-  # scaleway_rdb_instance.calculator_db will be created
+  ### scaleway_rdb_instance.calculator_db will be created
   + resource "scaleway_rdb_instance" "calculator_db" {
       + backup_same_region        = (known after apply)
       + backup_schedule_frequency = (known after apply)

@@ -73,3 +73,23 @@ Le fichier `04-ingress.yaml` définit les règles Ingress pour exposer les servi
 
 - **Deuxième Règle** :  
   Cette règle a été ajoutée pour rendre l'application accessible publiquement sur Internet. Elle permet de partager l'application avec d'autres utilisateurs sans qu'ils aient besoin de modifier leur fichier `hosts`.
+
+### Schéma du Déploiement Kubernetes
+
+graph TB
+  subgraph k8s ["Cluster Kubernetes"]
+    direction TB
+    redisPod["Pod Redis"]
+    rabbitmqPod["Pod RabbitMQ"]
+    backendPod["Pod Backend (API)"]
+    frontendPod["Pod Frontend"]
+    consumerPod["Pod Consumer"]
+  end
+  redisService["Service Redis"] --> redisPod
+  rabbitmqService["Service RabbitMQ"] --> rabbitmqPod
+  backendService["Service Backend"] --> backendPod
+  frontendService["Service Frontend"] --> frontendPod
+  consumerService["Service Consumer"] --> consumerPod
+  frontendService --> backendService
+  backendService --> redisService
+  backendService --> rabbitmqService
