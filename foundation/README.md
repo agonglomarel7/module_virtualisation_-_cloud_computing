@@ -25,6 +25,9 @@ graph TD;
 ```
 
 
+## 📜 Terraform Plan Output
+
+Le résultat de la commande `terraform plan` est affiché ci-dessous :
 
 Terraform used the selected providers to generate the following execution plan. Resource actions are indicated
 with the following symbols:
