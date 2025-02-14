@@ -30,6 +30,18 @@ function deleteLast() {
 
 // Vérifier si le backend est en ligne
 async function isBackendOnline() {
+<<<<<<< HEAD:projet_calculatrice_cloud_native/application/frontend/app.js
+  try {
+    const response = await fetch("http://127.0.0.1:5000/", { method: "GET" });
+    console.log("Réponse du serveur : ", response.status);
+    return response.ok;
+  } catch (error) {
+    console.error("Erreur réseau : ", error);
+    return false;
+  }
+}
+
+=======
     try {
         const response = await fetch(`${window.BACKEND_URL}`, { method: "GET" });
         console.log("Réponse du serveur : ", response.status);  // Log de réponse
@@ -69,6 +81,7 @@ async function getResult(operationId) {
 }
 
 
+>>>>>>> 516159b94cc84d89567f5c1c5fe41461e17ed85d:application/frontend/static/calculator.js
 // Calculer le résultat en envoyant la requête au backend
 async function calculateResult() {
   const backendOnline = await isBackendOnline();
@@ -85,7 +98,7 @@ async function calculateResult() {
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ expression }), // Envoyer l'expression au backend
+    body: JSON.stringify({ expression }), 
   })
     .then((response) => {
       if (!response.ok) {
@@ -98,13 +111,50 @@ async function calculateResult() {
         alert("Erreur: " + data.error);
         display.innerText = "Erreur";
       } else {
+<<<<<<< HEAD:projet_calculatrice_cloud_native/application/frontend/app.js
+        display.innerText = data.result;
+=======
         console.log("ID de l'opération : ", data.id);
         // Appeler la fonction pour obtenir le résultat
         getResult(data.id);  // Utiliser l'ID pour récupérer le résultat
+>>>>>>> 516159b94cc84d89567f5c1c5fe41461e17ed85d:application/frontend/static/calculator.js
       }
     })
     .catch((error) => {
       alert("Une erreur s'est produite : " + error.message);
       display.innerText = "Erreur";
     });
+}
+
+// Fonctions scientifiques
+function square() {
+  display.innerText += "**2"; 
+}
+
+function cube() {
+  display.innerText += "**3"; 
+}
+
+function sqrt() {
+  display.innerText = `sqrt(${display.innerText})`;
+}
+
+function cbrt() {
+  display.innerText = `cbrt(${display.innerText})`;
+}
+
+function factorial() {
+  display.innerText = `fact(${display.innerText})`;
+}
+
+function sin() {
+  display.innerText = `sin(${display.innerText})`;
+}
+
+function cos() {
+  display.innerText = `cos(${display.innerText})`;
+}
+
+function tan() {
+  display.innerText = `tan(${display.innerText})`;
 }
