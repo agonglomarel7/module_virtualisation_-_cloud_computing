@@ -21,6 +21,7 @@ graph TD;
     end
 
     Registry["📦 Namespace Conteneurs Unique (calculator-registry)"] -->|Stockage des images| K8S;
+
 ```
 
 ---
@@ -43,10 +44,8 @@ graph TD;
 
 ## 📜 Terraform Plan Output
 
-Le résultat de la commande `terraform plan` est affiché ci-dessous :
-
-Terraform used the selected providers to generate the following execution plan. Resource actions are indicated
-with the following symbols:
+Terraform used the selected providers to generate the following execution plan. Resource actions
+are indicated with the following symbols:
   + create
 
 Terraform will perform the following actions:
@@ -55,7 +54,7 @@ Terraform will perform the following actions:
   + resource "scaleway_container_namespace" "calculator_registry" {
       + destroy_registry      = false
       + id                    = (known after apply)
-      + name                  = "calculator-registry-dev"
+      + name                  = "calculator-registry"
       + organization_id       = (known after apply)
       + project_id            = (known after apply)
       + region                = "fr-par"
@@ -63,7 +62,7 @@ Terraform will perform the following actions:
       + registry_namespace_id = (known after apply)
     }
 
-  # scaleway_domain_record.calculator_dns will be created
+  # scaleway_domain_record.calculator_dns["dev"] will be created
   + resource "scaleway_domain_record" "calculator_dns" {
       + data            = (known after apply)
       + dns_zone        = "kiowy.net"
@@ -71,6 +70,21 @@ Terraform will perform the following actions:
       + id              = (known after apply)
       + keep_empty_zone = false
       + name            = "calculatrice-dev-marel-johanu-polytech-dijon"
+      + priority        = (known after apply)
+      + project_id      = (known after apply)
+      + root_zone       = (known after apply)
+      + ttl             = 3600
+      + type            = "A"
+    }
+
+  # scaleway_domain_record.calculator_dns["prod"] will be created
+  + resource "scaleway_domain_record" "calculator_dns" {
+      + data            = (known after apply)
+      + dns_zone        = "kiowy.net"
+      + fqdn            = (known after apply)
+      + id              = (known after apply)
+      + keep_empty_zone = false
+      + name            = "calculatrice-prod-marel-johanu-polytech-dijon"
       + priority        = (known after apply)
       + project_id      = (known after apply)
       + root_zone       = (known after apply)
@@ -86,7 +100,7 @@ Terraform will perform the following actions:
       + delete_additional_resources = true
       + id                          = (known after apply)
       + kubeconfig                  = (sensitive value)
-      + name                        = "calculator-cluster-dev"
+      + name                        = "calculator-cluster"
       + organization_id             = (known after apply)
       + project_id                  = (known after apply)
       + region                      = "fr-par"
@@ -104,7 +118,7 @@ Terraform will perform the following actions:
       + open_id_connect_config (known after apply)
     }
 
-  # scaleway_lb.calculator_lb will be created
+  # scaleway_lb.calculator_lb["dev"] will be created
   + resource "scaleway_lb" "calculator_lb" {
       + id                      = (known after apply)
       + ip_address              = (known after apply)
@@ -120,7 +134,23 @@ Terraform will perform the following actions:
       + zone                    = (known after apply)
     }
 
-  # scaleway_redis_cluster.calculator_db will be created
+  # scaleway_lb.calculator_lb["prod"] will be created
+  + resource "scaleway_lb" "calculator_lb" {
+      + id                      = (known after apply)
+      + ip_address              = (known after apply)
+      + ip_id                   = (known after apply)
+      + ip_ids                  = (known after apply)
+      + ipv6_address            = (known after apply)
+      + name                    = "calculator-lb-prod"
+      + organization_id         = (known after apply)
+      + project_id              = (known after apply)
+      + region                  = (known after apply)
+      + ssl_compatibility_level = "ssl_compatibility_level_intermediate"
+      + type                    = "lb-s"
+      + zone                    = (known after apply)
+    }
+
+  # scaleway_redis_cluster.calculator_db["dev"] will be created
   + resource "scaleway_redis_cluster" "calculator_db" {
       + certificate  = (known after apply)
       + cluster_size = 1
@@ -138,4 +168,22 @@ Terraform will perform the following actions:
       + public_network (known after apply)
     }
 
-Plan: 5 to add, 0 to change, 0 to destroy.
+  # scaleway_redis_cluster.calculator_db["prod"] will be created
+  + resource "scaleway_redis_cluster" "calculator_db" {
+      + certificate  = (known after apply)
+      + cluster_size = 1
+      + created_at   = (known after apply)
+      + id           = (known after apply)
+      + name         = "calculator-db-prod"
+      + node_type    = "REDIS-S"
+      + password     = (sensitive value)
+      + project_id   = (known after apply)
+      + updated_at   = (known after apply)
+      + user_name    = "default_user"
+      + version      = "6.2"
+      + zone         = (known after apply)
+
+      + public_network (known after apply)
+    }
+
+Plan: 8 to add, 0 to change, 0 to destroy.
