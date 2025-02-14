@@ -57,13 +57,29 @@ Consultez le [README - Fondation](./foundation/README.md) pour plus de détails.
 2. Le Frontend envoie une requête HTTP POST à l'API Backend.
 3. L'API Backend place le calcul dans la file d'attente RabbitMQ et retourne un ID de calcul.
 4. Le Consumer récupère le calcul de la file d'attente, effectue l'opération, et stocke le résultat dans Redis.
-
+```mermaid
+graph LR
+    user([Utilisateur]) -->|saisit une addition| F[Frontend]
+    F -->|"HTTP POST /api/calculate"| B[Backend]
+    B -->|"{id, calcul à faire}"| Q[\ RabbitMQ /]
+    B -.->|HTTP 200 OK| F
+    C[Consumer] -->|"récupére le dernier message"| Q[\ RabbitMQ /]
+    C -->|"redis.set(id, resultat du calcul)"| R[(Redis DB)]
+```
 ### Récupération du Résultat
 
 1. Une fois le Frontend a reçu l'ID du calcul, il envoie une requête HTTP GET à l'API Backend.
 2. L'API Backend récupère le résultat depuis Redis et le retourne au Frontend.
 3. Le Frontend affiche le résultat à l'utilisateur.
-
+```mermaid
+graph LR
+    F[Frontend] -->|"HTTP GET /api/result/{id}"| B[Backend]
+    B -->|"redis.get(id)"| R[(Redis DB)]
+    R -.->|"résultat ou pending"| B
+    B -.->|HTTP 200 + Résultat| F
+    B -.->|HTTP 404 Not Found| F
+    F -.->|Affiche le résultat ou l'erreur| user([Utilisateur])
+```
 ---
 
 ## Conclusion
