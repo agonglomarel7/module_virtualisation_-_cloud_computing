@@ -13,6 +13,23 @@ Ce projet consiste à déployer une **Calculatrice Cloud Native** en utilisant d
 **Vous pouvez tester notre application en ligne ici : [calculatrice-johanu-marel.randever.com](http://calculatrice-johanu-marel.randever.com/)**
 
 ---
+## Déroulé du Projet
+
+Le projet s'est déroulé comme la mise sur le marché d'une application, à l'image du processus adopté par une équipe technique de startup. Nous avons suivi les étapes essentielles permettant de développer, déployer et rendre disponible une application à destination d'utilisateurs finaux. Ainsi, nous sommes passés par plusieurs phases clés : de la conception et le provisionnement de l'infrastructure à la définition des fichiers de déploiement, en passant par la création de l'application elle-même.
+
+Dans une démarche inspirée des principes du Cloud Natif, nous avons mis en place de bonnes pratiques dès le départ. Cette approche nous a permis d'assurer la scalabilité, la flexibilité et la maintenance de notre infrastructure et de notre application. Parmi les pratiques adoptées, nous pouvons citer :
+
+- **Infrastructure as Code (IaC)** : La définition de l'infrastructure a été réalisée via **Terraform**, garantissant ainsi une gestion transparente, reproductible et traçable de notre environnement.
+
+- **Orchestration et déploiement avec Kubernetes** : L'architecture et la configuration de notre application ont été mises en place avec **Kubernetes**, permettant un déploiement cohérent, fiable et évolutif.
+
+- **Architecture microservices** : L'application a été conçue comme une grappe de microservices interconnectés, chacun répondant à une fonction spécifique et facilitant ainsi la maintenance et les éventuelles montées en charge.
+
+Conscients des inconvénients liés à la séparation traditionnelle entre les équipes Dev et Ops, nous avons délibérément choisi de ne pas adopter cette organisation. Au contraire, nous avons tous travaillé conjointement sur les aspects de développement et d'exploitation, favorisant ainsi la collaboration, la compréhension mutuelle et l'efficacité globale du projet.
+
+Ce mode de fonctionnement nous a permis d'appréhender de manière plus complète les enjeux et les défis inhérents à chaque étape du cycle de vie de l'application, et d'aboutir à une solution performante, résiliente et conforme aux exigences initialement définies.
+
+---
 
 ## Architecture de l'application
 
