@@ -1,21 +1,10 @@
-# Terraform - Fondation de l'Infrastructure
-
-## Les ressources de fondation suivantes sont définies via Terraform :
-
-+ Namespace de registre de conteneurs : Création d'un espace de noms pour stocker les images Docker dans un registre Scaleway.
-+ DNS : Enregistrement des domaines nécessaires pour l'application.
-+ Cluster Kubernetes : Déploiement du cluster Kubernetes sur Scaleway.
-+ Load Balancer : Mise en place de Load Balancers pour la gestion du trafic.
-+ Base de données : Base de données PostgreSQL pour le stockage des données persistantes de l'application.
-
-## Résultat de la commande terraform plan
-
-Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the following symbols:
+Terraform used the selected providers to generate the following execution plan. Resource actions are indicated
+with the following symbols:
   + create
 
 Terraform will perform the following actions:
 
-  ### scaleway_container_namespace.calculator_registry will be created
+  # scaleway_container_namespace.calculator_registry will be created
   + resource "scaleway_container_namespace" "calculator_registry" {
       + destroy_registry      = false
       + id                    = (known after apply)
@@ -27,7 +16,7 @@ Terraform will perform the following actions:
       + registry_namespace_id = (known after apply)
     }
 
-  ### scaleway_domain_record.calculator_dns will be created
+  # scaleway_domain_record.calculator_dns will be created
   + resource "scaleway_domain_record" "calculator_dns" {
       + data            = (known after apply)
       + dns_zone        = "kiowy.net"
@@ -42,7 +31,7 @@ Terraform will perform the following actions:
       + type            = "A"
     }
 
-  ### scaleway_k8s_cluster.calculator_cluster will be created
+  # scaleway_k8s_cluster.calculator_cluster will be created
   + resource "scaleway_k8s_cluster" "calculator_cluster" {
       + apiserver_url               = (known after apply)
       + cni                         = "cilium"
@@ -68,7 +57,7 @@ Terraform will perform the following actions:
       + open_id_connect_config (known after apply)
     }
 
-  ### scaleway_lb.calculator_lb will be created
+  # scaleway_lb.calculator_lb will be created
   + resource "scaleway_lb" "calculator_lb" {
       + id                      = (known after apply)
       + ip_address              = (known after apply)
@@ -84,32 +73,22 @@ Terraform will perform the following actions:
       + zone                    = (known after apply)
     }
 
-  ### scaleway_rdb_instance.calculator_db will be created
-  + resource "scaleway_rdb_instance" "calculator_db" {
-      + backup_same_region        = (known after apply)
-      + backup_schedule_frequency = (known after apply)
-      + backup_schedule_retention = (known after apply)
-      + certificate               = (known after apply)
-      + disable_backup            = false
-      + endpoint_ip               = (known after apply)
-      + endpoint_port             = (known after apply)
-      + engine                    = "PostgreSQL-13"
-      + id                        = (known after apply)
-      + is_ha_cluster             = false
-      + name                      = "calculator-db-dev"
-      + node_type                 = "DB-DEV-S"
-      + organization_id           = (known after apply)
-      + project_id                = (known after apply)
-      + read_replicas             = (known after apply)
-      + region                    = "fr-par"
-      + settings                  = (known after apply)
-      + user_name                 = (known after apply)
-      + volume_size_in_gb         = (known after apply)
-      + volume_type               = "lssd"
+  # scaleway_redis_cluster.calculator_db will be created
+  + resource "scaleway_redis_cluster" "calculator_db" {
+      + certificate  = (known after apply)
+      + cluster_size = 1
+      + created_at   = (known after apply)
+      + id           = (known after apply)
+      + name         = "calculator-db-dev"
+      + node_type    = "REDIS-S"
+      + password     = (sensitive value)
+      + project_id   = (known after apply)
+      + updated_at   = (known after apply)
+      + user_name    = "default_user"
+      + version      = "6.2"
+      + zone         = (known after apply)
 
-      + load_balancer (known after apply)
-
-      + logs_policy (known after apply)
+      + public_network (known after apply)
     }
 
-Plan: 5 to add, 0 to change, 0 to destroy.V
+Plan: 5 to add, 0 to change, 0 to destroy.
