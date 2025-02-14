@@ -1,4 +1,4 @@
-## Architecture du Projet
+## Architecture de l'application
 
 L'application est composée de plusieurs microservices :
 
@@ -7,6 +7,22 @@ L'application est composée de plusieurs microservices :
 3. **Consumer** : Service qui consomme les messages de la file d'attente RabbitMQ, effectue les calculs et stocke les résultats dans Redis.
 4. **Redis** : Base de données clé-valeur utilisée pour stocker les résultats des calculs.
 5. **RabbitMQ** : Système de gestion de file d'attente pour gérer les calculs à effectuer.
+
+```mermaid
+graph TB;
+    A(Utilisateur) --> B[Frontend]
+    B -->|"Envoi du calcul
+            ou
+            Demande d'un résultat"| C[API]
+    C -->|Transmission du calcul à faire | E[\RabbitMQ/]
+    -.->
+    F(["Consumer
+        ( calcul )"]) -->|Récupèration d'un calcul| E
+    F -->|Stockage du résultat| D
+    C <-->|Accès aux résultats| D[(Redis)]
+```
+
+---
 
 ## Structure de Données dans Redis
 
