@@ -28,13 +28,18 @@ resource "scaleway_k8s_cluster" "calculator_cluster" {
 }
 
 # Base de données avec `node_type`
-resource "scaleway_rdb_instance" "calculator_db" {
-  name          = "calculator-db-${var.environment}"
-  node_type     = "DB-DEV-S" # Type d'instance
-  engine        = "PostgreSQL-13"
-  region        = var.region
-  is_ha_cluster = var.is_ha_cluster
+resource "scaleway_redis_cluster" "calculator_db" {
+  name         = "calculator-db-${var.environment}"
+  node_type    = "REDIS-S"        # Type d'instance Scaleway pour Redis
+  version      = "6.2"            # Version de Redis
+  cluster_size = var.cluster_size # Nombre de nœuds Redis
+
+  # Identifiants obligatoires
+  user_name = var.redis_user
+  password  = var.redis_password
 }
+
+
 
 # LoadBalancer avec type requis
 resource "scaleway_lb" "calculator_lb" {

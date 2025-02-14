@@ -100,4 +100,4 @@ Terraform will perform the following actions:
       + logs_policy (known after apply)
     }
 
-Plan: 5 to add, 0 to change, 0 to destroy.
+Plan: 5 to add, 0 to change, 0 to destroy.V
