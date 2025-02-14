@@ -1,6 +1,6 @@
-# Infrastructure Terraform - Fondations
+# 🌍 Infrastructure Terraform - Fondations
 
-Ce projet Terraform met en place les éléments suivants sur Scaleway :
+Ce projet Terraform met en place l'infrastructure suivante sur Scaleway :
 
 ## 📌 Ressources créées
 
