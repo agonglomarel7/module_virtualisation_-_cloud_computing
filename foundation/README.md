@@ -14,6 +14,16 @@ Ce projet Terraform met en place les éléments suivants sur Scaleway :
 
 ## 📊 Schéma de l’infrastructure
 
+```mermaid
+graph TD;
+    LB["🌐 LoadBalancer (calculator-lb)"] -->|Trafic HTTP| K8S["☸️ Cluster Kubernetes (calculator-cluster)"];
+    LB -->|Trafic HTTP| Redis["🛢️ Base de données Redis (calculator-db)"];
+
+    K8S -->|Stockage des images| Registry["📦 Namespace Conteneurs (calculator-registry)"];
+    
+    DNS["🌍 Enregistrement DNS (${var.subdomain}.kiowy.net)"] -->|Redirige vers| LB;
+```
+
 
 
 Terraform used the selected providers to generate the following execution plan. Resource actions are indicated
