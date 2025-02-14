@@ -9,19 +9,18 @@ Ce projet Terraform met en place l'infrastructure suivante sur Scaleway :
 ```mermaid
 graph TD;
     subgraph PROD["🟢 Environnement Production"]
-        LB_PROD["🌐 LoadBalancer Production (calculator-lb-prod)"] -->|Trafic HTTP| K8S_PROD["☸️ Cluster Kubernetes (calculator-cluster-prod)"];
+        LB_PROD["🌐 LoadBalancer Production (calculator-lb-prod)"] -->|Trafic HTTP| K8S["☸️ Cluster Kubernetes Unique (calculator-cluster)"];
         LB_PROD -->|Trafic HTTP| Redis_PROD["🛢️ Base de données Redis Production (calculator-db-prod)"];
         DNS_PROD["🌍 DNS calculatrice-marel-johanu.polytech-dijon.kiowy.net"] -->|Redirige vers| LB_PROD;
     end
 
     subgraph DEV["🔵 Environnement Développement"]
-        LB_DEV["🌐 LoadBalancer Développement (calculator-lb-dev)"] -->|Trafic HTTP| K8S_DEV["☸️ Cluster Kubernetes (calculator-cluster-dev)"];
+        LB_DEV["🌐 LoadBalancer Développement (calculator-lb-dev)"] -->|Trafic HTTP| K8S;
         LB_DEV -->|Trafic HTTP| Redis_DEV["🛢️ Base de données Redis Développement (calculator-db-dev)"];
         DNS_DEV["🌍 DNS calculatrice-dev-marel-johanu.polytech-dijon.kiowy.net"] -->|Redirige vers| LB_DEV;
     end
 
-    Registry["📦 Namespace Conteneurs (calculator-registry)"] -->|Stockage des images| K8S_PROD;
-    Registry -->|Stockage des images| K8S_DEV;
+    Registry["📦 Namespace Conteneurs Unique (calculator-registry)"] -->|Stockage des images| K8S;
 ```
 
 ---
