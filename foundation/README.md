@@ -31,8 +31,7 @@ graph TD;
 | Ressource                   | Nom généré |
 |-----------------------------|--------------------------------------|
 | Namespace Conteneurs        | `calculator-registry` |
-| Cluster Kubernetes (Prod)   | `calculator-cluster-prod` |
-| Cluster Kubernetes (Dev)    | `calculator-cluster-dev` |
+| Cluster Kubernetes   | `calculator-cluster` |
 | Base de données (Prod)      | `calculator-db-prod` |
 | Base de données (Dev)       | `calculator-db-dev` |
 | LoadBalancer (Prod)         | `calculator-lb-prod` |
